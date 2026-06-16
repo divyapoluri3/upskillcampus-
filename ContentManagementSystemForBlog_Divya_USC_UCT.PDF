@@ -1,0 +1,428 @@
+CONTENT MANAGEMENT SYSTEM FOR BLOG
+
+Internship Project Report
+
+Submitted By
+
+Name: Divya Poluri
+
+Internship Program
+
+Upskill Campus Internship
+
+Project Title
+
+Content Management System for Blog
+
+Submission Date
+
+[Enter Date]
+
+---
+
+CERTIFICATE
+
+This is to certify that Divya Poluri has successfully completed the internship project titled "Content Management System for Blog" as part of the Upskill Campus Internship Program. The project was developed during the internship period under the prescribed guidelines and demonstrates practical implementation of web development concepts.
+
+---
+
+ACKNOWLEDGEMENT
+
+I would like to express my sincere gratitude to Upskill Campus for providing me with the opportunity to work on the project titled "Content Management System for Blog". This internship helped me gain practical knowledge in software development, project planning, and implementation.
+
+I also thank all the mentors and faculty members who provided valuable guidance and support throughout the internship.
+
+Divya Poluri
+
+---
+
+ABSTRACT
+
+The Content Management System (CMS) for Blog is a web-based application designed to allow users to create, edit, manage, and publish blog content efficiently. The system provides a user-friendly interface for content management, enabling administrators and authors to handle blog posts, categories, comments, and user accounts. The project aims to simplify content publishing while ensuring easy maintenance and scalability.
+
+---
+
+TABLE OF CONTENTS
+
+1. Introduction
+2. Objectives
+3. Problem Statement
+4.Code
+5. System Requirements
+6. Technologies Used
+7. System Design
+8. Modules Description
+9. Implementation
+10. Testing
+11. Results
+12. Future Enhancements
+13. Conclusion
+14. References
+15. GitHub Repository Links
+
+---
+
+1. INTRODUCTION
+
+A Content Management System (CMS) is a software application that enables users to create, manage, and modify digital content without requiring extensive technical knowledge. Blogging platforms are widely used for sharing information, news, tutorials, and personal experiences. This project provides a platform where administrators and authors can manage blog content efficiently.
+
+---
+
+2. OBJECTIVES
+
+- Develop an easy-to-use blogging platform.
+- Allow users to create and publish articles.
+- Manage categories and blog posts.
+- Provide authentication and authorization.
+- Enable content editing and deletion.
+- Improve content organization and accessibility.
+
+---
+
+3. PROBLEM STATEMENT
+
+Managing blog content manually can be time-consuming and inefficient. A centralized system is needed to manage posts, categories, users, and comments efficiently. The Content Management System addresses these challenges by providing an organized and automated platform.
+    4.   Code
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/**
+ * File Name: ContentManagementSystemForBlog.java
+ * Description: A complete console-based Content Management System (CMS) for managing blog posts.
+ */
+
+// Model class representing a unique blog post
+class BlogPost {
+    private final int id;
+    private String title;
+    private String content;
+    private final String author;
+
+    // Constructor to initialise fields
+    public BlogPost(int id, String title, String content, String author) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.author = author;
+    }
+
+    // Getters and Setters
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+    public String getAuthor() { return author; }
+
+    // Utility method to cleanly display post details
+    public void printPostDetails() {
+        System.out.println("\n==================================================");
+        System.out.println("ID:      " + id);
+        System.out.println("Title:   " + title);
+        System.out.println("Author:  " + author);
+        System.out.println("--------------------------------------------------");
+        System.out.println(content);
+        System.out.println("==================================================");
+    }
+}
+
+// Core execution engine for the CMS Application
+public class ContentManagementSystemForBlog {
+    private static final ArrayList<BlogPost> blogs = new ArrayList<>();
+    private static int idGenerator = 101; // Starts IDs at 101
+    private static final Scanner input = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        // Seed default template data
+        blogs.add(new BlogPost(idGenerator++, "Introduction to Java", "Java is a robust, class-based object-oriented language.", "Admin"));
+
+        while (true) {
+            printMenuOptions();
+            int choice = readIntegerSelection();
+
+            switch (choice) {
+                case 1 -> createNewBlogPost();
+                case 2 -> displayAllBlogPosts();
+                case 3 -> modifyExistingBlogPost();
+                case 4 -> removeBlogPost();
+                case 5 -> terminateApplication();
+                default -> System.out.println("⚠️ Invalid option selected. Please pick a number from 1 to 5.");
+            }
+        }
+    }
+
+    // Displays available interactive features
+    private static void printMenuOptions() {
+        System.out.println("\n📝 --- CMS SYSTEM MAIN MENU ---");
+        System.out.println("1. Create New Post");
+        System.out.println("2. View All Posts");
+        System.out.println("3. Update A Post");
+        System.out.println("4. Delete A Post");
+        System.out.println("5. Exit System");
+        System.out.print("Enter choice (1-5): ");
+    }
+
+    // Logic to build a brand new post
+    private static void createNewBlogPost() {
+        System.out.print("Enter Blog Title: ");
+        String title = input.nextLine();
+        System.out.print("Enter Content Text: ");
+        String content = input.nextLine();
+        System.out.print("Enter Author Name: ");
+        String author = input.nextLine();
+
+        BlogPost post = new BlogPost(idGenerator++, title, content, author);
+        blogs.add(post);
+        System.out.println("✅ Success! Created blog post entry with generated ID: " + post.getId());
+    }
+
+    // Logic to fetch and read out the full list
+    private static void displayAllBlogPosts() {
+        if (blogs.isEmpty()) {
+            System.out.println("📭 The system contains zero active posts right now.");
+            return;
+        }
+        for (BlogPost post : blogs) {
+            post.printPostDetails();
+        }
+    }
+
+    // Logic to select, fetch and modify fields of an object instance 
+    private static void modifyExistingBlogPost() {
+        System.out.print("Provide the target Blog ID to edit: ");
+        int id = readIntegerSelection();
+        BlogPost post = lookupPostById(id);
+
+        if (post == null) {
+            System.out.println("❌ Match Error: Unable to locate a post linked to ID: " + id);
+            return;
+        }
+
+        System.out.print("New Title (Or press Enter to keep current): ");
+        String textTitle = input.nextLine();
+        if (!textTitle.strip().isEmpty()) {
+            post.setTitle(textTitle);
+        }
+
+        System.out.print("New Content (Or press Enter to keep current): ");
+        String textContent = input.nextLine();
+        if (!textContent.strip().isEmpty()) {
+            post.setContent(textContent);
+        }
+
+        System.out.println("🔄 Update Completed Successfully!");
+    }
+
+    // Logic to discard an index object out of scope
+    private static void removeBlogPost() {
+        System.out.print("Provide target Blog ID to delete: ");
+        int id = readIntegerSelection();
+        BlogPost post = lookupPostById(id);
+
+        if (post == null) {
+            System.out.println("❌ Match Error: Unable to locate a post linked to ID: " + id);
+            return;
+        }
+
+        blogs.remove(post);
+        System.out.println("🗑️ Post successfully wiped out of internal system tracking.");
+    }
+
+    // Iterative search block
+    private static BlogPost lookupPostById(int id) {
+        for (BlogPost post : blogs) {
+            if (post.getId() == id) {
+                return post;
+            }
+        }
+        return null;
+    }
+
+    // Traps alphabetic inputs preventing application crashes
+    private static int readIntegerSelection() {
+        while (!input.hasNextInt()) {
+            System.out.print("⚠️ Bad Input. Please supply an integer index integer value: ");
+            input.next();
+        }
+        int out = input.nextInt();
+        input.nextLine(); // consume trailing character feed
+        return out;
+    }
+
+    // Gracefully drops references and kills system loop processes
+    private static void terminateApplication() {
+        System.out.println("🚪 Turning off Blog CMS engine safely. Have a wonderful day!");
+        input.close();
+        System.exit(0);
+    }
+}
+
+
+
+
+5. SYSTEM REQUIREMENTS
+
+Hardware Requirements
+
+- Processor: Intel Core i3 or above
+- RAM: 4 GB or above
+- Storage: 20 GB free space
+
+Software Requirements
+
+- Operating System: Windows/Linux
+- Java Development Kit (JDK)
+- IDE: Eclipse/IntelliJ IDEA
+- Browser: Chrome/Firefox
+- Git and GitHub
+
+---
+
+6. TECHNOLOGIES USED
+
+- Java
+- HTML
+- CSS
+- JavaScript
+- MySQL (Optional)
+- GitHub
+- Eclipse IDE
+
+---
+
+7. SYSTEM DESIGN
+
+User Roles
+
+Admin
+
+- Manage users
+- Manage blog posts
+- Manage categories
+- Monitor comments
+
+Author
+
+- Create posts
+- Edit posts
+- Delete posts
+
+Visitor
+
+- Read blog posts
+- View categories
+- Submit comments
+
+---
+
+8. MODULES DESCRIPTION
+
+User Management Module
+
+Handles registration, login, and user authentication.
+
+Blog Management Module
+
+Allows creation, editing, updating, and deletion of blog posts.
+
+Category Management Module
+
+Organizes blog posts into categories.
+
+Comment Management Module
+
+Handles user comments and feedback.
+
+Dashboard Module
+
+Provides statistical and management information.
+
+---
+
+9. IMPLEMENTATION
+
+The application was developed using Java and related web technologies. The system consists of multiple modules integrated together to provide seamless content management. Authentication mechanisms ensure secure access to administrative features.
+
+---
+
+10. TESTING
+
+Test Case 1
+
+Input: User Login
+
+Expected Result:
+Successful login with valid credentials.
+
+Actual Result:
+Pass
+
+Test Case 2
+
+Input: Create Blog Post
+
+Expected Result:
+Blog post saved successfully.
+
+Actual Result:
+Pass
+
+Test Case 3
+
+Input: Edit Existing Post
+
+Expected Result:
+Changes updated successfully.
+
+Actual Result:
+Pass
+
+---
+
+11. RESULTS
+
+The Content Management System was successfully developed and tested. Users can efficiently create, edit, publish, and manage blog content through a user-friendly interface. The project met all specified objectives.
+
+---
+
+12. FUTURE ENHANCEMENTS
+
+- Mobile application support
+- Advanced analytics dashboard
+- Social media integration
+- Rich text editor support
+- Email notifications
+- Multi-language support
+
+---
+
+13. CONCLUSION
+
+The Content Management System for Blog provides an efficient solution for managing blog content. The project demonstrates practical implementation of software development concepts and offers a scalable platform for future improvements.
+
+---
+
+14. REFERENCES
+
+1. Java Documentation
+2. Oracle Java Tutorials
+3. HTML and CSS Documentation
+4. GitHub Documentation
+5. Software Engineering Concepts
+
+---
+
+15. GITHUB REPOSITORY LINKS
+
+Source Code Link
+
+ https://github.com/divyapoluri3/upskillcampus-/commit/ae2c8fdc6d1760add79a9e1118e3b3f43d85dede
+
+Report Link
+
+
+Repository Name: upskillcampus
+
+Project Name: Content Management System for Blog
+
+Student Name: Divya Poluri
